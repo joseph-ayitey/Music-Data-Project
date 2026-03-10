@@ -45,3 +45,103 @@ function createSection(title, content) {
     
     return section;
 }
+
+function displayResults(userId) {
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = '';
+    
+    const analysis = analyzeUser(userId);
+    
+    if (!analysis.hasData) {
+        const msg = document.createElement('p');
+        msg.textContent = "This user didn't listen to any songs.";
+        resultsContainer.appendChild(msg);
+        return;
+    }
+// Q1: Most listened song (count)
+    if (analysis.mostListenedSongCount) {
+        const songs = analysis.mostListenedSongCount.songs;
+        const count = analysis.mostListenedSongCount.count;
+        const content = songs.length === 1 
+            ? `${songs[0]} (${count} listens)`
+            : songs.map(s => `${s} (${count} listens)`).join(', ');
+        resultsContainer.appendChild(createSection('Most listened song (by count)', content));
+    }
+    
+    // Most listened song (time)
+    if (analysis.mostListenedSongTime) {
+        const songs = analysis.mostListenedSongTime.songs;
+        const time = analysis.mostListenedSongTime.timeSeconds;
+        const content = songs.length === 1
+            ? `${songs[0]} (${formatTime(time)})`
+            : songs.map(s => `${s} (${formatTime(time)})`).join(', ');
+        resultsContainer.appendChild(createSection('Most listened song (by time)', content));
+    }
+    
+    // Q2: Most listened artist (count)
+    if (analysis.mostListenedArtistCount) {
+        const artists = analysis.mostListenedArtistCount.artists;
+        const count = analysis.mostListenedArtistCount.count;
+        const content = artists.length === 1
+            ? `${artists[0]} (${count} listens)`
+            : artists.map(a => `${a} (${count} listens)`).join(', ');
+        resultsContainer.appendChild(createSection('Most listened artist (by count)', content));
+    }
+    
+    // Most listened artist (time)
+    if (analysis.mostListenedArtistTime) {
+        const artists = analysis.mostListenedArtistTime.artists;
+        const time = analysis.mostListenedArtistTime.timeSeconds;
+        const content = artists.length === 1
+            ? `${artists[0]} (${formatTime(time)})`
+            : artists.map(a => `${a} (${formatTime(time)})`).join(', ');
+        resultsContainer.appendChild(createSection('Most listened artist (by time)', content));
+    }
+    
+    // Q3: Friday night song (count) - only show if exists
+    if (analysis.fridayNightSongCount) {
+        const songs = analysis.fridayNightSongCount.songs;
+        const count = analysis.fridayNightSongCount.count;
+        const content = songs.length === 1
+            ? `${songs[0]} (${count} listens)`
+            : songs.map(s => `${s} (${count} listens)`).join(', ');
+        resultsContainer.appendChild(createSection('Most listened song on Friday night (by count)', content));
+    }
+    
+    // Friday night song (time) - only show if exists
+    if (analysis.fridayNightSongTime) {
+        const songs = analysis.fridayNightSongTime.songs;
+        const time = analysis.fridayNightSongTime.timeSeconds;
+        const content = songs.length === 1
+            ? `${songs[0]} (${formatTime(time)})`
+            : songs.map(s => `${s} (${formatTime(time)})`).join(', ');
+        resultsContainer.appendChild(createSection('Most listened song on Friday night (by time)', content));
+    }
+    
+    // Longest streak
+    if (analysis.longestStreak) {
+        const songs = analysis.longestStreak.songs;
+        const length = analysis.longestStreak.length;
+        const content = songs.length === 1
+            ? `${songs[0]} (length: ${length})`
+            : songs.map(s => `${s} (length: ${length})`).join(', ');
+        resultsContainer.appendChild(createSection('Longest streak of same song', content));
+    }
+    
+    // Every day songs - only show if exists
+    if (analysis.everyDaySongs && analysis.everyDaySongs.length > 0) {
+        resultsContainer.appendChild(createSection('Songs listened to every day', analysis.everyDaySongs));
+    }
+    
+    //  Top genres
+    if (analysis.topGenres && analysis.topGenres.length > 0) {
+        const genreCount = analysis.topGenres.length;
+        const title = genreCount === 1 ? 'Top genre' : 
+                      genreCount === 2 ? 'Top 2 genres' : 
+                      genreCount === 3 ? 'Top 3 genres' : 
+                      `Top ${genreCount} genres`;
+        resultsContainer.appendChild(createSection(title, analysis.topGenres));
+    }
+}
+ 
+
