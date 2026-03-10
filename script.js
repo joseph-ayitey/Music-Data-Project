@@ -7,9 +7,7 @@
 import { getUserIDs } from "./data.js"
 import { countUsers,  analyzeUser } from "./data-service.js";
 
-window.onload = function () {
-  document.querySelector("body").innerText = `There are ${countUsers()} users`;
-};
+
 
 function formatTime(seconds) {
     const mins = Math.floor(seconds / 60);
@@ -145,3 +143,28 @@ function displayResults(userId) {
 }
  
 
+function init() {
+    const userSelect = document.getElementById('user-select');
+    const resultsContainer = document.getElementById('results');
+    
+    // Populate dropdown
+    const users = getUserIDs();
+    users.forEach(userId => {
+        const option = document.createElement('option');
+        option.value = userId;
+        option.textContent = userId;
+        userSelect.appendChild(option);
+    });
+    
+    // Handle selection
+    userSelect.addEventListener('change', (e) => {
+        const userId = e.target.value;
+        if (userId) {
+            displayResults(userId);
+        } else {
+            resultsContainer.innerHTML = '';
+        }
+    });
+}
+
+window.addEventListener('DOMContentLoaded', init);
