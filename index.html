@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="module" src="script.mjs"></script>
+  </head>
+  <body>
+    <main>
+        <h1>Music Listening Analysis</h1>
+        
+        <label for="user-select">Select a user to view their listening statistics:</label>
+        <select id="user-select" aria-label="Select user">
+            <option value="">-- Select a user --</option>
+        </select>
+        
+        <div id="results" role="region" aria-live="polite" aria-label="Analysis results">
+        </div>
+    </main>
+  </body>
+</html>
